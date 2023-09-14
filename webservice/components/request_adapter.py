@@ -26,10 +26,7 @@ class BaseRestRequestsAdapter(Component):
     # TODO: url and url_params could come from work_ctx
     def _request(self, method, url=None, url_params=None, **kwargs):
         url = self._get_url(url=url, url_params=url_params)
-        content_only = kwargs.pop("content_only", True)
-        # TODO: turn on/off debug from webservice setting?
-        url_to_log = self._sanitize_url_for_log(url)
-        _logger.info("%s call to %s", method, url_to_log)
+        content_only = kwargs.pop("content_only", False)
         new_kwargs = kwargs.copy()
         new_kwargs.update(
             {
