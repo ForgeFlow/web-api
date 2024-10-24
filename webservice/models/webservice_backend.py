@@ -62,6 +62,7 @@ class WebserviceBackend(models.Model):
             ("application/json", "JSON"),
             ("application/xml", "XML"),
             ("application/x-www-form-urlencoded", "Form"),
+            ("multipart/form-data", "Multipart Form"),
         ],
         required=True,
     )
