@@ -25,11 +25,15 @@ class BaseRestRequestsAdapter(Component):
     def _request(self, method, url=None, url_params=None, **kwargs):
         url = self._get_url(url=url, url_params=url_params)
         new_kwargs = kwargs.copy()
+        # `timeout` is left to travel in kwargs like any other requests
+        # parameter, so that a caller can bound a call that would otherwise
+        # hold the worker for as long as the peer keeps the socket open.
+        # Passing none of it keeps the previous behaviour: requests defaults
+        # to no timeout.
         new_kwargs.update(
             {
                 "auth": self._get_auth(**kwargs),
                 "headers": self._get_headers(**kwargs),
-                "timeout": None,
             }
         )
         # pylint: disable=E8106
@@ -166,10 +170,11 @@ class BackendApplicationOAuth2RestRequestsAdapter(Component):
     def _request(self, method, url=None, url_params=None, **kwargs):
         url = self._get_url(url=url, url_params=url_params)
         new_kwargs = kwargs.copy()
+        # Same as the base adapter: the caller's timeout, if any, travels in
+        # kwargs rather than being cleared here.
         new_kwargs.update(
             {
                 "headers": self._get_headers(**kwargs),
-                "timeout": None,
             }
         )
         client = BackendApplicationClient(client_id=self.collection.oauth2_clientid)
